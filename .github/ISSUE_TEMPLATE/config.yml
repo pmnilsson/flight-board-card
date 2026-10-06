@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: No flight data / wrong flights
+    url: https://github.com/AlexandrErohin/home-assistant-flightradar24/issues
+    about: The flight data comes from the Flightradar24 integration. Data problems belong there.
