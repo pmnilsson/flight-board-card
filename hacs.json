@@ -1,0 +1,6 @@
+{
+  "name": "Flight Board Card",
+  "filename": "flight-board-card.js",
+  "render_readme": true,
+  "homeassistant": "2024.1.0"
+}
