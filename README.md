@@ -1,13 +1,14 @@
 # Flight Board Card
 
+> **Fork notice.** This is a fork of the excellent [flight-board-card](https://github.com/pmnilsson/flight-board-card) by **P-M Nilsson**, who created the card, the board styles and the airport search. All credit for the original goes to him. This fork adds an airline filter, a time window, a flight tracker and a scrolling split-flap animation (see the options below and the [changelog](CHANGELOG.md)). Fork additions by **Robert Gribnau** ([@stargazer992](https://github.com/stargazer992)).
+
 [![hacs_badge](https://img.shields.io/badge/HACS-Custom-41BDF5.svg)](https://hacs.xyz/)
-[![Validate](https://github.com/pmnilsson/flight-board-card/actions/workflows/validate.yml/badge.svg)](https://github.com/pmnilsson/flight-board-card/actions/workflows/validate.yml)
 
 An airport **departures and arrivals board** for your Home Assistant dashboard. It is built for wall panels and tablets: large, readable text, live status and six classic board styles, including a split-flap board with flipping letters.
 
 It shows the flights from the [Flightradar24 integration](https://github.com/AlexandrErohin/home-assistant-flightradar24). No Flightradar24 subscription is needed.
 
-![Split-flap style with flipping letters](https://raw.githubusercontent.com/pmnilsson/flight-board-card/main/images/splitflap-demo.gif)
+![Split-flap style with flipping letters](https://raw.githubusercontent.com/stargazer992/flight-board-card/main/images/splitflap-demo.gif)
 
 ## Features
 
@@ -30,11 +31,11 @@ It shows the flights from the [Flightradar24 integration](https://github.com/Ale
 
 | Classic | Digital flaps |
 |---|---|
-| ![Classic](https://raw.githubusercontent.com/pmnilsson/flight-board-card/main/images/classic.png) | ![Digital flaps](https://raw.githubusercontent.com/pmnilsson/flight-board-card/main/images/digital.png) |
+| ![Classic](https://raw.githubusercontent.com/stargazer992/flight-board-card/main/images/classic.png) | ![Digital flaps](https://raw.githubusercontent.com/stargazer992/flight-board-card/main/images/digital.png) |
 | **Amsterdam style** | **London style** |
-| ![Amsterdam style](https://raw.githubusercontent.com/pmnilsson/flight-board-card/main/images/amsterdam.png) | ![London style](https://raw.githubusercontent.com/pmnilsson/flight-board-card/main/images/london.png) |
+| ![Amsterdam style](https://raw.githubusercontent.com/stargazer992/flight-board-card/main/images/amsterdam.png) | ![London style](https://raw.githubusercontent.com/stargazer992/flight-board-card/main/images/london.png) |
 | **LED dot-matrix** | |
-| ![LED dot-matrix](https://raw.githubusercontent.com/pmnilsson/flight-board-card/main/images/led.png) | |
+| ![LED dot-matrix](https://raw.githubusercontent.com/stargazer992/flight-board-card/main/images/led.png) | |
 
 ## Requirements
 
@@ -56,7 +57,7 @@ If the integration is missing, the card shows a message telling you what to inst
 ### HACS (recommended)
 
 1. Open HACS, click the three dots in the top right and choose **Custom repositories**.
-2. Add `https://github.com/pmnilsson/flight-board-card` with type **Dashboard**.
+2. Add `https://github.com/stargazer992/flight-board-card` with type **Dashboard**.
 3. Search for **Flight Board Card** and click **Download**.
 4. Reload your browser.
 
@@ -192,6 +193,13 @@ The airport search uses a compact copy of the [mwgg/Airports](https://github.com
 
 This project is not affiliated with or endorsed by Flightradar24, any airport or any airport operator. The styles are original designs inspired by well-known types of departure boards. Flight data comes from the Flightradar24 integration and may be delayed or incomplete, so don't use it for real travel decisions.
 
+## Credits
+
+- **Original card:** [pmnilsson/flight-board-card](https://github.com/pmnilsson/flight-board-card) by P-M Nilsson (MIT).
+- **Fork additions** (airline dropdown, time window, flight tracker, split-flap cycling): Robert Gribnau, [@stargazer992](https://github.com/stargazer992).
+- **Flight data:** the [Flightradar24 integration](https://github.com/AlexandrErohin/home-assistant-flightradar24) by Alexandr Erohin.
+- **Airport data:** [mwgg/Airports](https://github.com/mwgg/Airports) (MIT).
+
 ## License
 
-[MIT](LICENSE) © 2026 P-M Nilsson
+[MIT](LICENSE) © 2026 P-M Nilsson (original card), © 2026 Robert Gribnau (fork additions)

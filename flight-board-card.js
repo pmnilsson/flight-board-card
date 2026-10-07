@@ -1,7 +1,15 @@
 // Flight Board Card for Home Assistant
 // Airport departures/arrivals board for the Flightradar24 integration.
-// https://github.com/pmnilsson/flight-board-card - MIT License - (c) 2026 P-M Nilsson
-// Fork additions (1.4.0): airline dropdown, hide_private, split-flap character cycling.
+//
+// Original card: https://github.com/pmnilsson/flight-board-card
+//   MIT License - (c) 2026 P-M Nilsson. All the board styles, airport search and the
+//   original card design are his work. Thank you!
+//
+// This fork: https://github.com/stargazer992/flight-board-card
+//   MIT License - fork additions (c) 2026 Robert Gribnau (stargazer992):
+//   airline dropdown with add/remove, hide private flights, time window dropdown,
+//   flight tracker (pinned panel + Track flight dropdown) and the split-flap
+//   character-cycling animation.
 const FBC_VERSION = "1.7.0";
 const FBC_THEMES = {
   classic:   "Classic (yellow)",
@@ -1167,6 +1175,6 @@ if (!customElements.get("flight-board-card-editor")) customElements.define("flig
 if (!customElements.get("flight-board-card")) {
   customElements.define("flight-board-card", FlightBoardCard);
   window.customCards = window.customCards || [];
-  window.customCards.push({ type: "flight-board-card", name: "Flight Board Card", description: "Airport departures and arrivals board with classic board styles (Flightradar24)", preview: false, documentationURL: "https://github.com/pmnilsson/flight-board-card" });
+  window.customCards.push({ type: "flight-board-card", name: "Flight Board Card", description: "Airport departures and arrivals board with classic board styles (Flightradar24)", preview: false, documentationURL: "https://github.com/stargazer992/flight-board-card" });
   console.info("%c FLIGHT-BOARD-CARD %c " + FBC_VERSION, "background:#ffd21f;color:#111;font-weight:700", "");
 }
