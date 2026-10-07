@@ -113,6 +113,8 @@ The board looks best on its own dashboard view with the **Panel (single card)** 
 | `show_window_selector` | `true` | Show the time window dropdown (Any time / Next 1h ... 24h) on the card |
 | `time_windows` | 1, 2, 4, 8, 12, 24 | Hours offered in the time window dropdown |
 | `time_window` | `0` | Time window selected at start in hours (`0` = any time). A choice made in the dropdown overrides it on that device |
+| `show_flight_tracker` | `true` | Show the "Track a flight" field on the card |
+| `tracked_flights` | (none) | Flight numbers always tracked, for example `[AA1234, DL567]`. Flights added on the card are saved on that device and can be removed with the x |
 | `hide_private` | `true` | Hide private, charter and general-aviation flights (flights without an airline IATA code) |
 | `flip_cycle` | `true` | Split-flap style only: letters and numbers scroll through the drum before settling, like a real board |
 | `flip_on_load` | `true` | Spin every tile in from blank on first load |
@@ -142,6 +144,19 @@ airports:
 ```
 
 Any airport can be found with the search. The favourites are just quick picks. Built-in favourites: Stockholm Arlanda, Stockholm Bromma, Göteborg Landvetter, Copenhagen, Oslo, Helsinki, London Heathrow, Amsterdam Schiphol, Frankfurt, Paris CDG, Milano Malpensa, Zurich, Singapore Changi, Dubai and New York JFK.
+
+### Flight tracker (fork)
+
+Type a flight number (`AA1234`, or the callsign form `AAL1234`) in the "Track a flight" field and press Enter. The flight is pinned in a **Tracking** panel above the board, with its time, city, flight and status. It is also highlighted in the departures and arrivals lists. The tracker ignores the airline, time window and private-flight filters, and the `rows` limit.
+
+```yaml
+type: custom:flight-board-card
+tracked_flights:
+  - AA1234
+  - DL567
+```
+
+A flight is only found if it is in the data for the airport the board is showing. The Flightradar24 integration lists a limited number of flights to and from that airport, a few hours either side of now. A flight that is not there shows "is not on the board right now". If a flight number is used for both an arrival and a departure at the airport, both are shown.
 
 ### Airline filter (fork)
 

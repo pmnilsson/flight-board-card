@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.6.0 (fork)
+- Flight tracker: enter a flight number to pin its status in a Tracking panel above the board, and highlight it in the lists. Works with flight numbers and callsigns, ignores the other filters, and is remembered per device.
+- New options `show_flight_tracker` and `tracked_flights`.
+
 ## 1.5.0 (fork)
 - Add airlines to the dropdown from the card: pick from the airlines currently on the board or type a 2-letter code. Saved per device, removable with the x.
 - Time window dropdown (Any time, Next 1/2/4/8/12/24 hours), configurable with `time_windows` and `time_window`, remembered per device.
