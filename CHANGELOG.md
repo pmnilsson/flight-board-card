@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.5.0 (fork)
+- Add airlines to the dropdown from the card: pick from the airlines currently on the board or type a 2-letter code. Saved per device, removable with the x.
+- Time window dropdown (Any time, Next 1/2/4/8/12/24 hours), configurable with `time_windows` and `time_window`, remembered per device.
+- New options `allow_add_airlines`, `show_window_selector`, `time_windows`, `time_window`.
+
 ## 1.4.0 (fork)
 - Airline filter dropdown (default AA, DL, UA, configurable with `airlines`), remembered per device.
 - `hide_private` hides flights without an airline IATA code (on by default).

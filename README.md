@@ -109,6 +109,10 @@ The board looks best on its own dashboard view with the **Panel (single card)** 
 | `show_airline_selector` | `true` | Show the airline filter dropdown (All / AA / DL / UA ...) on the card |
 | `airlines` | AA, DL, UA | Airlines in the dropdown. Plain codes (`- AA`) or `{iata: AA, name: American}` entries |
 | `airline` | (all) | Airline pre-selected at start. A choice made in the dropdown overrides it on that device |
+| `allow_add_airlines` | `true` | Lets you add airlines to the dropdown on the card: pick one from "On the board now" or type a 2-letter code. Added airlines are saved on that device and can be removed with the x |
+| `show_window_selector` | `true` | Show the time window dropdown (Any time / Next 1h ... 24h) on the card |
+| `time_windows` | 1, 2, 4, 8, 12, 24 | Hours offered in the time window dropdown |
+| `time_window` | `0` | Time window selected at start in hours (`0` = any time). A choice made in the dropdown overrides it on that device |
 | `hide_private` | `true` | Hide private, charter and general-aviation flights (flights without an airline IATA code) |
 | `flip_cycle` | `true` | Split-flap style only: letters and numbers scroll through the drum before settling, like a real board |
 | `flip_on_load` | `true` | Spin every tile in from blank on first load |
@@ -151,6 +155,8 @@ airlines:
   - iata: WN
     name: Southwest
 ```
+
+The time window hides flights scheduled later than the chosen number of hours from now. The `rows` limit still applies, so raise `rows` if a long window should list more flights.
 
 American Eagle, Delta Connection and United Express report their mainline code, so they appear under AA, DL and UA. With a single airline selected you may see fewer rows than `rows`, because only that airline's flights are listed. The selection is stored per device (browser localStorage).
 
