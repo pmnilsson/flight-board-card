@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.8.0 (fork)
+- Tracker follows flights that are not on the airport board through the Flightradar24 integration (additional tracked sensor): live ETA, altitude and speed once airborne, "Not airborne yet" before. Tail numbers work too. New option `track_via_integration`.
+- Credits now list stargazer992.
+
 ## 1.7.0 (fork)
 - Track flight dropdown in the header: pick any flight on the board (filterable by flight, city or airline) to pin it; tap again to untrack.
 

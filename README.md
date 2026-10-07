@@ -1,6 +1,6 @@
 # Flight Board Card
 
-> **Fork notice.** This is a fork of the excellent [flight-board-card](https://github.com/pmnilsson/flight-board-card) by **P-M Nilsson**, who created the card, the board styles and the airport search. All credit for the original goes to him. This fork adds an airline filter, a time window, a flight tracker and a scrolling split-flap animation (see the options below and the [changelog](CHANGELOG.md)). Fork additions by **Robert Gribnau** ([@stargazer992](https://github.com/stargazer992)).
+> **Fork notice.** This is a fork of the excellent [flight-board-card](https://github.com/pmnilsson/flight-board-card) by **P-M Nilsson**, who created the card, the board styles and the airport search. All credit for the original goes to him. This fork adds an airline filter, a time window, a flight tracker and a scrolling split-flap animation (see the options below and the [changelog](CHANGELOG.md)). Fork additions by **[@stargazer992](https://github.com/stargazer992)**.
 
 [![hacs_badge](https://img.shields.io/badge/HACS-Custom-41BDF5.svg)](https://hacs.xyz/)
 
@@ -115,6 +115,7 @@ The board looks best on its own dashboard view with the **Panel (single card)** 
 | `time_windows` | 1, 2, 4, 8, 12, 24 | Hours offered in the time window dropdown |
 | `time_window` | `0` | Time window selected at start in hours (`0` = any time). A choice made in the dropdown overrides it on that device |
 | `show_flight_tracker` | `true` | Show the Track flight dropdown and the "Track a flight" field on the card |
+| `track_via_integration` | `true` | Follow flights that are not on the board through the Flightradar24 integration's "Add to track" feature (see Flight tracker) |
 | `tracked_flights` | (none) | Flight numbers always tracked, for example `[AA1234, DL567]`. Flights added on the card are saved on that device and can be removed with the x |
 | `hide_private` | `true` | Hide private, charter and general-aviation flights (flights without an airline IATA code) |
 | `flip_cycle` | `true` | Split-flap style only: letters and numbers scroll through the drum before settling, like a real board |
@@ -157,7 +158,9 @@ tracked_flights:
   - DL567
 ```
 
-A flight is only found if it is in the data for the airport the board is showing. The Flightradar24 integration lists a limited number of flights to and from that airport, a few hours either side of now. A flight that is not there shows "is not on the board right now". If a flight number is used for both an arrival and a departure at the airport, both are shown.
+**Flights that are not on the board.** The airport lists only reach a few hours ahead, so a flight that is further out is not on the board yet. For those, the card asks the Flightradar24 integration to follow the flight (it writes the number to `text.flightradar24_add_to_track`) and shows it from `sensor.flightradar24_additional_tracked`. Until the aircraft is airborne the integration only knows the flight number, so the panel shows "Not airborne yet". Once it is in the air you see origin or destination, ETA, altitude and ground speed, and after landing "Landed". Tail numbers (`N123AB`) work too. Flights added on the card are removed from the integration again when you remove them (set `track_via_integration: false` to turn this off). The integration's tracked list is shared by the whole Home Assistant installation. Times are shown in the airport's local time zone.
+
+The flight is found on the board when it is in the data for the airport the board is showing. The Flightradar24 integration lists a limited number of flights to and from that airport, a few hours either side of now. A flight that is not there shows "is not on the board right now". If a flight number is used for both an arrival and a departure at the airport, both are shown.
 
 ### Airline filter (fork)
 
@@ -196,10 +199,10 @@ This project is not affiliated with or endorsed by Flightradar24, any airport or
 ## Credits
 
 - **Original card:** [pmnilsson/flight-board-card](https://github.com/pmnilsson/flight-board-card) by P-M Nilsson (MIT).
-- **Fork additions** (airline dropdown, time window, flight tracker, split-flap cycling): Robert Gribnau, [@stargazer992](https://github.com/stargazer992).
+- **Fork additions** (airline dropdown, time window, flight tracker, split-flap cycling): [@stargazer992](https://github.com/stargazer992).
 - **Flight data:** the [Flightradar24 integration](https://github.com/AlexandrErohin/home-assistant-flightradar24) by Alexandr Erohin.
 - **Airport data:** [mwgg/Airports](https://github.com/mwgg/Airports) (MIT).
 
 ## License
 
-[MIT](LICENSE) © 2026 P-M Nilsson (original card), © 2026 Robert Gribnau (fork additions)
+[MIT](LICENSE) © 2026 P-M Nilsson (original card), © 2026 stargazer992 (fork additions)
