@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.9.0 (fork)
+- Optional schedule sensor (`schedule_entity`): flights that are not airborne yet show their route and scheduled time, with the date when it is not today. New companion PyScript in `extras/automation_flight_board_schedule.py`.
+
 ## 1.8.0 (fork)
 - Tracker follows flights that are not on the airport board through the Flightradar24 integration (additional tracked sensor): live ETA, altitude and speed once airborne, "Not airborne yet" before. Tail numbers work too. New option `track_via_integration`.
 - Credits now list stargazer992.

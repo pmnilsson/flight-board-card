@@ -116,6 +116,7 @@ The board looks best on its own dashboard view with the **Panel (single card)** 
 | `time_window` | `0` | Time window selected at start in hours (`0` = any time). A choice made in the dropdown overrides it on that device |
 | `show_flight_tracker` | `true` | Show the Track flight dropdown and the "Track a flight" field on the card |
 | `track_via_integration` | `true` | Follow flights that are not on the board through the Flightradar24 integration's "Add to track" feature (see Flight tracker) |
+| `schedule_entity` | `sensor.flight_board_schedule` | Optional sensor with the schedule of flights that are not airborne yet (see below) |
 | `tracked_flights` | (none) | Flight numbers always tracked, for example `[AA1234, DL567]`. Flights added on the card are saved on that device and can be removed with the x |
 | `hide_private` | `true` | Hide private, charter and general-aviation flights (flights without an airline IATA code) |
 | `flip_cycle` | `true` | Split-flap style only: letters and numbers scroll through the drum before settling, like a real board |
@@ -159,6 +160,8 @@ tracked_flights:
 ```
 
 **Flights that are not on the board.** The airport lists only reach a few hours ahead, so a flight that is further out is not on the board yet. For those, the card asks the Flightradar24 integration to follow the flight (it writes the number to `text.flightradar24_add_to_track`) and shows it from `sensor.flightradar24_additional_tracked`. Until the aircraft is airborne the integration only knows the flight number, so the panel shows "Not airborne yet". Once it is in the air you see origin or destination, ETA, altitude and ground speed, and after landing "Landed". Tail numbers (`N123AB`) work too. Flights added on the card are removed from the integration again when you remove them (set `track_via_integration: false` to turn this off). The integration's tracked list is shared by the whole Home Assistant installation. Times are shown in the airport's local time zone.
+
+**Schedule for flights that have not departed (optional).** Before takeoff the integration knows nothing but the flight number. The optional PyScript [`extras/automation_flight_board_schedule.py`](extras/automation_flight_board_schedule.py) looks up the schedule on Flightradar24 for the flights the card is tracking and publishes it as `sensor.flight_board_schedule`. The card then shows the destination or origin and the scheduled time (with the date, for example `SCHED OCT 9`, when the flight leaves on another day), and switches to live data once the plane is airborne. It needs [PyScript](https://github.com/custom-components/pyscript) and uses an unofficial Flightradar24 web endpoint that can be blocked or change at any time; the script then keeps the last good data and sends one notification. Copy the file to your `pyscript` folder.
 
 The flight is found on the board when it is in the data for the airport the board is showing. The Flightradar24 integration lists a limited number of flights to and from that airport, a few hours either side of now. A flight that is not there shows "is not on the board right now". If a flight number is used for both an arrival and a departure at the airport, both are shown.
 
