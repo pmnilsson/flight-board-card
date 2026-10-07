@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.4.0 (fork)
+- Airline filter dropdown (default AA, DL, UA, configurable with `airlines`), remembered per device.
+- `hide_private` hides flights without an airline IATA code (on by default).
+- Split-flap style: tiles scroll through the character drum before settling on the right letter or number. Options `flip_cycle`, `flip_on_load`, `flip_step_ms`, `flip_max_steps`.
+- Only tiles whose text changed animate on updates.
+
 ## 1.3.1
 - More room for the Status column (taken from Time and Flight, Destination unchanged).
 - Status words switch to short forms (EXP, DELAY, DEP, CANCEL) only when the full word does not fit.

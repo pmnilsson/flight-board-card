@@ -106,6 +106,14 @@ The board looks best on its own dashboard view with the **Panel (single card)** 
 | `show_airline` | `true` | Show the airline and airport code under the flight number and city |
 | `show_selector` | `true` | Show the style menu on the card |
 | `show_airport_selector` | `true` | Show the airport search field on the card |
+| `show_airline_selector` | `true` | Show the airline filter dropdown (All / AA / DL / UA ...) on the card |
+| `airlines` | AA, DL, UA | Airlines in the dropdown. Plain codes (`- AA`) or `{iata: AA, name: American}` entries |
+| `airline` | (all) | Airline pre-selected at start. A choice made in the dropdown overrides it on that device |
+| `hide_private` | `true` | Hide private, charter and general-aviation flights (flights without an airline IATA code) |
+| `flip_cycle` | `true` | Split-flap style only: letters and numbers scroll through the drum before settling, like a real board |
+| `flip_on_load` | `true` | Spin every tile in from blank on first load |
+| `flip_step_ms` | `55` | Milliseconds per character step (higher = slower) |
+| `flip_max_steps` | `24` | Most characters a tile scrolls through before settling (lower = faster) |
 | `airports` | built-in list | Favourite airports shown when the search field is empty (see below) |
 | `title` | airport name | Your own title instead of the airport name |
 | `departures_entity` | `sensor.flightradar24_airport_departures` | Departures sensor |
@@ -131,7 +139,24 @@ airports:
 
 Any airport can be found with the search. The favourites are just quick picks. Built-in favourites: Stockholm Arlanda, Stockholm Bromma, Göteborg Landvetter, Copenhagen, Oslo, Helsinki, London Heathrow, Amsterdam Schiphol, Frankfurt, Paris CDG, Milano Malpensa, Zurich, Singapore Changi, Dubai and New York JFK.
 
+### Airline filter (fork)
+
+```yaml
+type: custom:flight-board-card
+theme: splitflap
+airlines:
+  - AA
+  - DL
+  - UA
+  - iata: WN
+    name: Southwest
+```
+
+American Eagle, Delta Connection and United Express report their mainline code, so they appear under AA, DL and UA. With a single airline selected you may see fewer rows than `rows`, because only that airline's flights are listed. The selection is stored per device (browser localStorage).
+
 ## Good to know
+
+- **Fork notice.** This fork adds the airline dropdown, private-flight hiding and the scrolling split-flap animation. Install it in HACS as a custom repository (type Dashboard) in place of the original; the card type stays `custom:flight-board-card`.
 
 - **One airport per Home Assistant installation.** The Flightradar24 integration follows one airport at a time. Changing the airport on the card changes it for every screen and every card using the integration.
 - **Switching airport takes a moment.** The board shows *Loading* until Flightradar24 has fetched the new airport's flights, usually 20–60 seconds depending on the integration's scan interval.
