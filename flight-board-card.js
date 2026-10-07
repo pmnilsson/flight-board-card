@@ -2,7 +2,7 @@
 // Airport departures/arrivals board for the Flightradar24 integration.
 // https://github.com/pmnilsson/flight-board-card - MIT License - (c) 2026 P-M Nilsson
 // Fork additions (1.4.0): airline dropdown, hide_private, split-flap character cycling.
-const FBC_VERSION = "1.6.0";
+const FBC_VERSION = "1.7.0";
 const FBC_THEMES = {
   classic:   "Classic (yellow)",
   splitflap: "Split-flap",
@@ -164,17 +164,18 @@ class FlightBoardCard extends HTMLElement {
 .name { font-size:calc(var(--fs) + 8px); font-weight:700; letter-spacing:1px; color:var(--title); text-transform:uppercase; }
 .name small { color:var(--accent); margin-left:10px; font-size:var(--fs); }
 .right { display:flex; align-items:center; gap:14px; }
-.apbox, .thbox, .albox, .wnbox { position:relative; }
-.apin, .thbtn, .albtn, .wnbtn { font-size:calc(var(--fs) * .62); padding:6px 10px; border-radius:6px; background:var(--selbg); color:var(--selfg);
+.apbox, .thbox, .albox, .wnbox, .trbox { position:relative; }
+.apin, .thbtn, .albtn, .wnbtn, .trbtn { font-size:calc(var(--fs) * .62); padding:6px 10px; border-radius:6px; background:var(--selbg); color:var(--selfg);
   border:1px solid var(--line); font-family:inherit; text-shadow:none; }
 .apin { width:min(300px, 34vw); outline:none; }
 .apin::placeholder { color:var(--selfg); opacity:.7; }
-.thbtn, .albtn, .wnbtn { cursor:pointer; white-space:nowrap; }
-.apres, .thres, .alres, .wnres { display:none; position:absolute; right:0; top:calc(100% + 4px); max-height:60vh; overflow:auto;
+.thbtn, .albtn, .wnbtn, .trbtn { cursor:pointer; white-space:nowrap; }
+.apres, .thres, .alres, .wnres, .trres { display:none; position:absolute; right:0; top:calc(100% + 4px); max-height:60vh; overflow:auto;
   background:#1c1c1c; border:1px solid #444; border-radius:8px; z-index:10; box-shadow:0 8px 24px rgba(0,0,0,.6);
   font-family:"Roboto","Helvetica Neue",Arial,sans-serif; text-shadow:none; letter-spacing:0; text-transform:none; }
 .apres { width:min(440px, 80vw); }
 .thres, .alres, .wnres { width:min(340px, 80vw); }
+.trres { width:min(460px, 86vw); }
 .apitem, .thitem, .alitem, .wnitem, .aladd { padding:12px 14px; color:#eee; font-size:calc(var(--fs) * .7); cursor:pointer; border-bottom:1px solid #2c2c2c; }
 .apitem:hover, .thitem:hover, .alitem:hover, .wnitem:hover, .aladd:hover { background:#2b2b2b; }
 .alitem { display:flex; justify-content:space-between; align-items:center; }
@@ -201,6 +202,13 @@ class FlightBoardCard extends HTMLElement {
 .trknf b { color:var(--accent); margin-right:6px; }
 tr.trkd td { box-shadow: inset 0 0 0 9999px rgba(255,210,31,.16); }
 tr.trkd td:first-child { border-left:4px solid #ffd21f; }
+.tritem { padding:10px 14px; color:#eee; font-size:calc(var(--fs) * .66); cursor:pointer; border-bottom:1px solid #2c2c2c; }
+.tritem:hover { background:#2b2b2b; }
+.tritem b { color:#ffd21f; margin-right:8px; }
+.tritem span { display:block; color:#999; font-size:.82em; margin-top:2px; }
+.tritem.on { background:#2a2615; }
+.trq { display:block; width:calc(100% - 28px); margin:10px 14px; box-sizing:border-box; font-size:calc(var(--fs) * .7); padding:7px 9px; border-radius:6px; background:#2b2b2b; color:#eee; border:1px solid #555; outline:none; }
+.trnone { padding:12px 14px; color:#999; font-size:calc(var(--fs) * .66); }
 .alok { font-size:calc(var(--fs) * .7); padding:6px 14px; border-radius:6px; background:#ffd21f; color:#111; border:0; cursor:pointer; font-weight:700; }
 .apitem b { color:#ffd21f; margin-right:8px; }
 .apitem span { display:block; color:#999; font-size:.8em; margin-top:2px; }
@@ -300,7 +308,7 @@ tr:nth-child(even) td { background:var(--zebra); }
     this.shadowRoot.innerHTML = `<style>${this._css()}</style>
 <div class="board">
   <div class="top"><div class="name"></div>
-    <div class="right">${c.show_airport_selector ? `<div class="apbox"><input class="apin" type="search" autocomplete="off" spellcheck="false" placeholder="Search airport"><div class="apres"></div></div>` : ""}${this._alHtml()}${this._wnHtml()}${c.show_selector ? `<div class="thbox"><button class="thbtn" type="button" title="Board style"></button><div class="thres"></div></div>` : ""}<div class="clock"></div></div></div>
+    <div class="right">${c.show_airport_selector ? `<div class="apbox"><input class="apin" type="search" autocomplete="off" spellcheck="false" placeholder="Search airport"><div class="apres"></div></div>` : ""}${this._alHtml()}${this._wnHtml()}${this._trBtnHtml()}${c.show_selector ? `<div class="thbox"><button class="thbtn" type="button" title="Board style"></button><div class="thres"></div></div>` : ""}<div class="clock"></div></div></div>
   ${this._trkHtml()}
   <div class="${colsCls}">${show !== "arrivals" ? dep : ""}${show !== "departures" ? arr : ""}</div>
   <div class="msg" style="display:none"></div>
@@ -317,6 +325,7 @@ tr:nth-child(even) td { background:var(--zebra); }
         if (menu.style.display === "block") { close(); return; }
         if (this._closeAl) this._closeAl();
         if (this._closeWn) this._closeWn();
+        if (this._closeTr) this._closeTr();
         menu.innerHTML = Object.entries(FBC_THEMES).map(([k, v]) =>
           `<div class="thitem${k === this._theme ? " on" : ""}" data-k="${k}">${k === this._theme ? "&#10003; " : ""}${v}</div>`).join("");
         menu.style.display = "block";
@@ -357,6 +366,7 @@ tr:nth-child(even) td { background:var(--zebra); }
         if (am.style.display === "block") { aclose(); return; }
         if (this._closeMenus) this._closeMenus();
         if (this._closeWn) this._closeWn();
+        if (this._closeTr) this._closeTr();
         this._alMenu();
         am.style.display = "block";
       });
@@ -388,6 +398,34 @@ tr:nth-child(even) td { background:var(--zebra); }
       });
       this._updateAlBtn();
     }
+    const trb = this.shadowRoot.querySelector(".trbtn");
+    if (trb) {
+      const trm = this.shadowRoot.querySelector(".trres");
+      ["click", "pointerdown", "touchstart"].forEach(ev => { trb.addEventListener(ev, stop); trm.addEventListener(ev, stop); });
+      ["keydown", "keyup"].forEach(ev => trm.addEventListener(ev, stop));
+      const trclose = () => { trm.style.display = "none"; };
+      this._closeTr = trclose;
+      trb.addEventListener("click", () => {
+        if (trm.style.display === "block") { trclose(); return; }
+        if (this._closeMenus) this._closeMenus();
+        if (this._closeAl) this._closeAl();
+        if (this._closeWn) this._closeWn();
+        trm.innerHTML = `<input class="trq" type="text" autocomplete="off" spellcheck="false" placeholder="Filter by flight, city or airline"><div class="trlist"></div>`;
+        const q = trm.querySelector(".trq");
+        q.addEventListener("input", () => this._trList());
+        this._trList();
+        trm.style.display = "block";
+      });
+      trm.addEventListener("click", (e) => {
+        const it = e.target.closest(".tritem");
+        if (!it) return;
+        const code = it.dataset.k;
+        const cur = this._trackedAll().find(o => o.code === code);
+        if (cur && cur.extra) this._removeTrack(code);
+        else if (!cur) this._addTrack(code);
+        this._trList();
+      });
+    }
     const wb = this.shadowRoot.querySelector(".wnbtn");
     if (wb) {
       const wm = this.shadowRoot.querySelector(".wnres");
@@ -398,6 +436,7 @@ tr:nth-child(even) td { background:var(--zebra); }
         if (wm.style.display === "block") { wclose(); return; }
         if (this._closeMenus) this._closeMenus();
         if (this._closeAl) this._closeAl();
+        if (this._closeTr) this._closeTr();
         const list = [0].concat(this._windows());
         wm.innerHTML = list.map(h => `<div class="wnitem${h === this._window ? " on" : ""}" data-h="${h}">` +
           `${h === this._window ? "&#10003; " : ""}${this._wnLabel(h)}</div>`).join("");
@@ -459,7 +498,7 @@ tr:nth-child(even) td { background:var(--zebra); }
   _attach() {
     if (!this._built) return;
     if (!this._winClick) {
-      this._winClick = () => { if (this._closeMenus) this._closeMenus(); if (this._closeAl) this._closeAl(); if (this._closeWn) this._closeWn(); };
+      this._winClick = () => { if (this._closeMenus) this._closeMenus(); if (this._closeAl) this._closeAl(); if (this._closeWn) this._closeWn(); if (this._closeTr) this._closeTr(); };
       window.addEventListener("click", this._winClick);
     }
     if (window.ResizeObserver && !this._ro) {
@@ -625,6 +664,58 @@ tr:nth-child(even) td { background:var(--zebra); }
     this._saveTrack();
     this._render();
     this._renderTrack();
+  }
+  _trBtnHtml() {
+    return this._config.show_flight_tracker !== false
+      ? `<div class="trbox"><button class="trbtn" type="button" title="Track a flight">Track flight &#9662;</button><div class="trres"></div></div>` : "";
+  }
+  // Every flight on the board right now (departures and arrivals), soonest first, for the Track flight dropdown.
+  _boardFlights() {
+    const hp = this._config.hide_private !== false;
+    const out = [];
+    const seen = {};
+    for (const kind of ["dep", "arr"]) {
+      const st = this._hass && this._hass.states[kind === "dep" ? this._config.departures_entity : this._config.arrivals_entity];
+      if (!st || !Array.isArray(st.attributes.flights)) continue;
+      const key = kind === "dep" ? "time_scheduled_departure" : "time_scheduled_arrival";
+      for (const f of st.attributes.flights) {
+        if (!f || !f[key] || (hp && !f.airline_iata)) continue;
+        const code = this._trkNorm(f.flight_number || f.callsign);
+        if (!code) continue;
+        const id = kind + code + f[key];
+        if (seen[id]) continue;
+        seen[id] = 1;
+        const r = this._rowOf(f, kind);
+        out.push({ ts: f[key], kind, code, r });
+      }
+    }
+    return out.sort((a, b) => a.ts - b.ts);
+  }
+  // Fill the dropdown list, filtered by what is typed in the box. Tracked flights get a check mark.
+  _trList() {
+    const root = this.shadowRoot;
+    const box = root && root.querySelector(".trlist");
+    if (!box) return;
+    const qi = root.querySelector(".trq");
+    const q = this._norm(qi ? qi.value : "").trim();
+    const qn = this._trkNorm(q);
+    const tracked = this._trackedAll();
+    let list = this._boardFlights();
+    if (q) list = list.filter(x => {
+      const hay = this._norm(x.r.fl + " " + x.r.c + " " + x.r.al + " " + x.r.code);
+      return hay.indexOf(q) >= 0 || (qn && x.r.keys.some(k => k.indexOf(qn) >= 0));
+    });
+    const total = list.length;
+    list = list.slice(0, 60);
+    if (!list.length) {
+      box.innerHTML = `<div class="trnone">${this._boardFlights().length ? "No flights match" : "No flights on the board yet"}</div>`;
+      return;
+    }
+    box.innerHTML = list.map(x => {
+      const on = tracked.some(o => o.code === x.code);
+      return `<div class="tritem${on ? " on" : ""}" data-k="${this._esc(x.code)}">${on ? "&#10003; " : ""}<b>${this._esc(x.r.fl)}</b>` +
+        `${this._esc(x.r.c)}<span>${x.kind === "dep" ? "Departs" : "Arrives"} ${this._esc(x.r.t)} - ${this._esc(x.r.al)} - ${this._esc(x.r.s)}</span></div>`;
+    }).join("") + (total > list.length ? `<div class="trnone">${total - list.length} more - type to narrow the list</div>` : "");
   }
   _trkHtml() {
     const bar = this._config.show_flight_tracker !== false
@@ -998,7 +1089,7 @@ const FBC_LABELS = {
   show_airline: "Show airline and airport code", show_selector: "Show style menu on the card",
   show_airport_selector: "Show airport search on the card",
   show_airline_selector: "Show airline dropdown on the card", allow_add_airlines: "Let people add airlines from the card",
-  show_window_selector: "Show time window dropdown on the card", show_flight_tracker: "Show the flight tracker on the card", time_window: "Start time window (hours ahead, 0 = any time)", hide_private: "Hide private and charter flights",
+  show_window_selector: "Show time window dropdown on the card", show_flight_tracker: "Show the flight tracker (dropdown and field) on the card", time_window: "Start time window (hours ahead, 0 = any time)", hide_private: "Hide private and charter flights",
   flip_cycle: "Split-flap: letters cycle before settling", flip_on_load: "Split-flap: spin in when the board loads",
   flip_step_ms: "Split-flap: milliseconds per flip", flip_max_steps: "Split-flap: most flips per character", title: "Title (leave empty for the airport name)",
   departures_entity: "Departures sensor", arrivals_entity: "Arrivals sensor", airport_entity: "Tracked airport entity",

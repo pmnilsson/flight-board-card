@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.7.0 (fork)
+- Track flight dropdown in the header: pick any flight on the board (filterable by flight, city or airline) to pin it; tap again to untrack.
+
 ## 1.6.0 (fork)
 - Flight tracker: enter a flight number to pin its status in a Tracking panel above the board, and highlight it in the lists. Works with flight numbers and callsigns, ignores the other filters, and is remembered per device.
 - New options `show_flight_tracker` and `tracked_flights`.
