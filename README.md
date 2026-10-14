@@ -14,13 +14,14 @@ It shows the flights from the [Flightradar24 integration](https://github.com/Ale
 ## Features
 
 - Departures and arrivals side by side (or stacked, or only one of them)
-- Six board styles, selectable from a menu on the card itself:
+- Seven board styles, selectable from a menu on the card itself:
   - **Classic**: black and yellow
   - **Split-flap**: every letter on its own flap, letters flip when something changes
   - **Digital flaps**: modern flap-look panels
   - **Amsterdam style**: dark blue and yellow, clean and very readable
   - **London style**: black and yellow
   - **LED dot-matrix**: glowing amber retro display
+  - **Arlanda style**: navy and yellow like the Swedavia boards at Stockholm Arlanda, Swedish and English side by side
 - Airport search on the card: type a name, city, IATA or ICAO code and pick from about 8,000 airports worldwide, with no setup or API key needed
 - A short list of favourite airports is shown when you tap the search field. Use the built-in list or set your own.
 - Times and clock in the airport's own local time zone, 24-hour or 12-hour format
@@ -106,7 +107,7 @@ The board looks best on its own dashboard view with the **Panel (single card)** 
 
 | Option | Default | Description |
 |---|---|---|
-| `theme` | `classic` | Starting style: `classic`, `splitflap`, `digital`, `amsterdam`, `london`, `led`. A style picked in the menu on the card overrides this on that device. |
+| `theme` | `classic` | Starting style: `classic`, `splitflap`, `digital`, `amsterdam`, `london`, `led`, `arlanda`. A style picked in the menu on the card overrides this on that device. |
 | `time_format` | `24h` | `24h` (18:30) or `12h` (6:30 PM) |
 | `rows` | `12` | Number of flights shown in each list |
 | `font_size` | `22` | Base text size in pixels |

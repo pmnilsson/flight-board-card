@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.4.0
+- New board style: Arlanda style, modelled on the Swedavia boards at Stockholm Arlanda. Navy rows, yellow destinations, bilingual headers (Avgångar / Departures) and remarks that alternate between Swedish and English.
+- Theme aliases `swedavia`, `arn` and `stockholm` select the Arlanda style.
+- Fixed: the Boarding status cell picked up the board's padding and rounded corners.
+
 ## 1.3.1
 - More room for the Status column (taken from Time and Flight, Destination unchanged).
 - Status words switch to short forms (EXP, DELAY, DEP, CANCEL) only when the full word does not fit.

@@ -1,7 +1,7 @@
 // Flight Board Card for Home Assistant
 // Airport departures/arrivals board for the Flightradar24 integration.
 // https://github.com/pmnilsson/flight-board-card - MIT License - (c) 2026 P-M Nilsson
-const FBC_VERSION = "1.3.1";
+const FBC_VERSION = "1.4.0";
 const FBC_THEMES = {
   classic:   "Classic (yellow)",
   splitflap: "Split-flap",
@@ -9,8 +9,9 @@ const FBC_THEMES = {
   amsterdam: "Amsterdam style",
   london:    "London style",
   led:       "LED dot-matrix",
+  arlanda:   "Arlanda style",
 };
-const FBC_THEME_ALIASES = { solari: "splitflap", frankfurt: "digital", schiphol: "amsterdam", heathrow: "london" };
+const FBC_THEME_ALIASES = { solari: "splitflap", frankfurt: "digital", schiphol: "amsterdam", heathrow: "london", swedavia: "arlanda", arn: "arlanda", stockholm: "arlanda" };
 const FBC_AIRPORTS = [
   {icao:"ESSA",iata:"ARN",name:"Stockholm Arlanda",tz:"Europe/Stockholm"},
   {icao:"ESSB",iata:"BMA",name:"Stockholm Bromma",tz:"Europe/Stockholm"},
@@ -163,7 +164,7 @@ tr:nth-child(even) td { background:var(--zebra); }
 .c { width:34%; font-weight:700; text-transform:var(--cityCase); color:var(--city); }
 .f { width:16%; color:var(--flight); }
 .s { width:37%; font-weight:700; color:var(--st); }
-.s.ok { color:var(--ok); } .s.warn { color:var(--warn); } .s.bad { color:var(--bad); } .s.board { color:var(--brd); }
+.s.ok { color:var(--ok); } .s.warn { color:var(--warn); } .s.bad { color:var(--bad); } .s.brdg { color:var(--brd); }
 .sub { display:block; font-size:calc(var(--fs) * .6); color:var(--sub); font-weight:400; text-transform:none; }
 .noair .sub { display:none; }
 .st { display:flex; justify-content:space-between; align-items:baseline; gap:10px; }
@@ -223,14 +224,40 @@ tr:nth-child(even) td { background:var(--zebra); }
 .board.led td, .board.led .ph, .board.led .clock, .board.led .name { text-shadow:0 0 6px currentColor, 0 0 1px currentColor; letter-spacing:2px; }
 .board.led .panel { background-color:#000; background-image:radial-gradient(rgba(255,176,0,.08) 1px, transparent 1.4px); background-size:5px 5px; }
 .board.led .ph { border-bottom:1px solid #3a2600; }
+.lsv { display:none; }
+.alt { display:grid; }
+.alt > .a { grid-area:1/1; min-width:0; }
+.alt > .a2 { opacity:0; }
+.board.arlanda { --bg:#061d38; --fg:#fff; --font:"Arial","Helvetica Neue",Helvetica,sans-serif;
+  --title:#fff; --accent:#ffc20e; --clock:#fff; --panel:#082648; --hbg:#061d38; --hfg:#fff; --th:#ffc20e; --line:#1d4677; --line2:transparent;
+  --zebra:#0d3463; --time:#fff; --city:#ffc20e; --cityCase:none; --flight:#fff; --st:#fff; --ok:#fff; --warn:#ffc20e; --bad:#ff4a4a; --brd:#ffc20e;
+  --sub:#9db4d0; --selbg:#0d3463; --selfg:#fff; }
+.board.arlanda .ph { text-transform:none; letter-spacing:0; font-weight:700; font-size:calc(var(--fs) + 8px); padding:10px 12px 12px; gap:12px; }
+.board.arlanda .ph .lsv { display:inline; }
+.board.arlanda .ph .len { color:#ffc20e; font-weight:400; }
+.board.arlanda .ph svg { width:calc(var(--fs) + 12px); height:calc(var(--fs) + 12px); }
+.board.arlanda th { text-transform:none; letter-spacing:0; font-size:calc(var(--fs) * .7); font-weight:700; color:#fff; border-bottom:0; padding:6px 10px; }
+.board.arlanda th i { font-style:normal; font-weight:400; color:#ffc20e; margin-left:6px; }
+.board.arlanda td { border-bottom:0; padding:10px; }
+.board.arlanda tr:nth-child(odd) td { background:var(--panel); }
+.board.arlanda .c, .board.arlanda .t, .board.arlanda .f, .board.arlanda .s { font-weight:400; }
+.board.arlanda .s.bad { background:#c8102e !important; color:#fff; font-weight:700; }
+.board.arlanda .name { text-transform:none; letter-spacing:0; }
+.board.arlanda .name small { color:#ffc20e; font-weight:400; }
+.board.arlanda .clock { font-weight:400; letter-spacing:1px; }
+.board.arlanda .alt > .a1 { animation: fbcA 12s infinite; animation-delay:var(--altd, 0s); }
+.board.arlanda .alt > .a2 { animation: fbcB 12s infinite; animation-delay:var(--altd, 0s); }
+@keyframes fbcA { 0%, 46% { opacity:1 } 50%, 96% { opacity:0 } 100% { opacity:1 } }
+@keyframes fbcB { 0%, 46% { opacity:0 } 50%, 96% { opacity:1 } 100% { opacity:0 } }
+@media (prefers-reduced-motion: reduce) { .board.arlanda .alt > .a1, .board.arlanda .alt > .a2 { animation:none; } }
 `;
   }
   _build() {
     const c = this._config;
     const show = c.show === "departures" || c.show === "arrivals" ? c.show : "both";
     const colsCls = "cols" + (show !== "both" ? " one" : "") + (c.layout === "stacked" ? " stacked" : "");
-    const dep = `<div class="panel"><div class="ph">${this._icon("dep")}Departures</div><div class="dep"></div></div>`;
-    const arr = `<div class="panel"><div class="ph">${this._icon("arr")}Arrivals</div><div class="arr"></div></div>`;
+    const dep = `<div class="panel"><div class="ph">${this._icon("dep")}<span class="lsv">Avgångar</span><span class="len">Departures</span></div><div class="dep"></div></div>`;
+    const arr = `<div class="panel"><div class="ph">${this._icon("arr")}<span class="lsv">Ankomster</span><span class="len">Arrivals</span></div><div class="arr"></div></div>`;
     this.shadowRoot.innerHTML = `<style>${this._css()}</style>
 <div class="board">
   <div class="top"><div class="name"></div>
@@ -387,7 +414,7 @@ tr:nth-child(even) td { background:var(--zebra); }
     if (real) return [(kind === "dep" ? "DEPARTED " : "LANDED ") + this._fmt(real), "ok"];
     if (/landed/i.test(txt)) return [("LANDED " + this._txtTime(txt)).trim(), "ok"];
     if (/departed/i.test(txt)) return [("DEPARTED " + this._txtTime(txt)).trim(), "ok"];
-    if (/board/i.test(txt) || /board/.test(st)) return ["BOARDING", "board"];
+    if (/board/i.test(txt) || /board/.test(st)) return ["BOARDING", "brdg"];
     if (est && sched && est - sched >= 15 * 60) return ["DELAYED " + this._fmt(est), "warn"];
     if (/delay/i.test(txt) || /delay/.test(st)) return [("DELAYED " + this._txtTime(txt)).trim(), "warn"];
     if (est && sched && est !== sched) return ["EXPECTED " + this._fmt(est), ""];
@@ -442,6 +469,7 @@ tr:nth-child(even) td { background:var(--zebra); }
     if (rows === null) return `<div class="empty">Sensor not available</div>`;
     if (!rows.length) return `<div class="empty">No flights right now</div>`;
     const flap = this._theme === "splitflap", n = this._tiles4();
+    if (this._theme === "arlanda") return this._tableArn(rows, kind);
     const head = `<tr><th class="t">Time</th><th class="c">${kind === "dep" ? "Destination" : "From"}</th><th class="f">Flight</th><th class="s">Status</th></tr>`;
     const body = rows.map((r, i) => {
       if (flap) {
@@ -454,6 +482,31 @@ tr:nth-child(even) td { background:var(--zebra); }
       const [sw, stt] = this._split(r.s);
       const inner = `<div class="st"><span class="sw" data-short="${this._esc(this._short(sw))}">${this._esc(sw)}</span>${stt ? `<span class="stt">${this._esc(stt)}</span>` : ""}</div>`;
       const sCell = changed ? `<div class="flip">${inner}</div>` : inner;
+      return `<tr><td class="t">${this._esc(r.t)}</td><td class="c">${this._esc(r.c)} <span class="sub">${this._esc(r.code)}</span></td>` +
+        `<td class="f">${this._esc(r.fl)}<span class="sub">${this._esc(r.al)}</span></td><td class="s ${r.cls}">${sCell}</td></tr>`;
+    }).join("");
+    return `<table>${head}${body}</table>`;
+  }
+  _sv(w) {
+    const m = { CANCELLED: "Inställd", DIVERTED: "Omdirigerad", DEPARTED: "Avgått", LANDED: "Landat", BOARDING: "Boarding",
+      DELAYED: "Ny tid", EXPECTED: "Ny tid", "ON TIME": "I tid", SCHEDULED: "" };
+    return w in m ? m[w] : w;
+  }
+  _en(w) {
+    const m = { CANCELLED: "Cancelled", DIVERTED: "Diverted", DEPARTED: "Departed", LANDED: "Landed", BOARDING: "Boarding",
+      DELAYED: "New time", EXPECTED: "New time", "ON TIME": "On time", SCHEDULED: "" };
+    return w in m ? m[w] : w;
+  }
+  _tableArn(rows, kind) {
+    const b = this.shadowRoot.querySelector(".board");
+    if (b) b.style.setProperty("--altd", "-" + ((Date.now() / 1000) % 12).toFixed(2) + "s");
+    const head = `<tr><th class="t">Tid<i>Time</i></th><th class="c">${kind === "dep" ? "Till<i>To</i>" : "Från<i>From</i>"}</th>` +
+      `<th class="f">Flyg<i>Flight</i></th><th class="s">Anmärkning<i>Remarks</i></th></tr>`;
+    const body = rows.map(r => {
+      const [sw, stt] = this._split(r.s);
+      const sv = this._sv(sw), en = this._en(sw);
+      const one = (w) => `<div class="st"><span class="sw">${this._esc(w)}</span>${stt ? `<span class="stt">${this._esc(stt)}</span>` : ""}</div>`;
+      const sCell = sv === en ? one(sv) : `<div class="alt"><div class="a a1">${one(sv)}</div><div class="a a2">${one(en)}</div></div>`;
       return `<tr><td class="t">${this._esc(r.t)}</td><td class="c">${this._esc(r.c)} <span class="sub">${this._esc(r.code)}</span></td>` +
         `<td class="f">${this._esc(r.fl)}<span class="sub">${this._esc(r.al)}</span></td><td class="s ${r.cls}">${sCell}</td></tr>`;
     }).join("");
